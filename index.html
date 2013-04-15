@@ -1,86 +1,109 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <title>PROPER&trade; - Semantic Rich Text Editor</title>    
-    
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PROPER™</title>
+
     <!-- Styles -->
-    <link href="stylesheets/page.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="stylesheets/proper.css" media="screen" rel="stylesheet" type="text/css" />
-    
+    <link rel="stylesheet" href="css/normalize.css">
+
+    <style>
+        /* type */
+        * {
+            font-size: 14px;
+            font-family: Georgia;
+            color: #444;
+        }
+
+        /* WYSIWYG */
+        #wysiwyg {
+            width: 450px;
+            height: 380px;
+            float: left;
+            padding: 10px;
+            background-color: #efefef;
+            outline: 0;
+        }
+
+        #wysiwyg:hover {
+        }
+        #wysiwyg[contenteditable=true] {
+        }
+
+        /* layout */
+        div#container {
+            width: 960px;
+            position: relative;
+            left: 50%;
+            margin-left: -480px;
+        }
+
+        div#source {
+            width: 450px;
+            height: 380px;
+            float: right;
+            background-color: #111;
+            padding: 10px;
+            color: #fff;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        div#credits {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="css/proper.css">
+
     <!-- Libraries -->
     <script src="lib/jquery-min.js"></script>
     <script src="lib/jquery.hotkeys.js"></script>
     <script src="lib/underscore.js"></script>
-        
+
     <!-- Source -->
     <script src="proper.js"></script>
 
     <script>
         // Proper Init
         $(function() {
-            window.editor = new Proper();
-            
-            $('.content').click(function() {
-                editor.activate($(this), {
+            var myEditor = new Proper();
+
+            $(document).ready(function() {
+                myEditor.activate($('#wysiwyg'), {
                     placeholder: 'Enter Text',
                     controlsTarget: $('#tools'),
                     codeFontFamily: 'Monaco, Consolas, "Lucida Console", monospace'
                 });
-                
+
                 // Update node when editor commands are applied
-                editor.bind('changed', function() {
-                    $('#source').text(editor.content());
-                });
-            });
-            
-            $('h2.no-markup').click(function() {
-                editor.activate($(this), { markup: false, multiline: false });
-                
-                // Update node when editor commands are applied
-                editor.bind('changed', function() {
-                    $('#source').text(editor.content());
+                myEditor.bind('changed', function() {
+                    $('div#source').text(myEditor.content());
                 });
             });
         });
     </script>
-    
+
 </head>
 <body>
-    <h1>PROPER&trade; - Semantic Rich Text Editor (Version 0.3.1)</h1>
-    
-    <div id="main">
+    <div id="container">
+        <h1>PROPER™ (Version 0.3.1)</h1>
+
         <div id="tools"></div>
-        <div class="content">
+
+        <div id="wysiwyg">
             <p>Text wants to be <strong>editable</strong>.<br/>But text also wants to be <strong>meaningful</strong>.
             </p>
         </div>
-    
-        <div class="content">
-            <p>
-                On the right, you see the <em>sanitized</em> (and hopefully correct) HTML output.
-            </p>
-            <p>
-                Known issues:
-                <ul>
-                    <li>Does not yet consider <code>markup</code> for pasted content</li>
-                </ul>
-            </p>
-        </div>
-        
-        <h2 class="no-markup">
-            Here we prevent from using markup and newlines
-        </h2>
-    </div>
-    
-    <div id="source">
 
+        <div id="source"></div>
+
+        <div style="clear: both;"></div>
+
+        <div id="credits">
+            <p>Original code by <a href="http://github.com/michael/">http://github.com/michael/</a>.<br>
+            Fork by <a href="http://github.com/nbrogi/">http://github.com/nbrogi/</a></p>
+        </div>
     </div>
-    <br class="clear"/>
-    <div class="credits">
-        Straight from the labs of <a href="http://quasipartikel.at">Quaspartikel</a> 
-        and <a href="http://froodee.at/">froodee</a>. 
-    </div>
-    
-    <a href="http://github.com/michael/proper"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://assets2.github.com/img/71eeaab9d563c2b3c590319b398dd35683265e85?repo=&url=http%3A%2F%2Fs3.amazonaws.com%2Fgithub%2Fribbons%2Fforkme_right_gray_6d6d6d.png&path=" alt="Fork me on GitHub"></a>
-</body> 
+</body>
 </html>
