@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PROPER™</title>
+    <title>Proper</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="css/normalize.css">
@@ -9,7 +9,7 @@
     <style>
         /* type */
         * {
-            font-size: 14px;
+            font-size: 16px;
             font-family: Georgia;
             color: #444;
         }
@@ -52,6 +52,77 @@
             margin-top: 20px;
             margin-bottom: 40px;
         }
+
+        /* old proper.css (temporarely moved here for quick editing) */
+
+        .proper-commands .command {
+            position:relative;
+            float:left;
+            width: 18px;
+            height: 18px;
+            padding: 4px;
+            margin:0 2px 0 0;
+            color:#999;
+            font-size:9px;
+            text-align:center;
+            background:rgba(0,0,0,0.05);
+
+            -webkit-border-radius:5px;
+            -moz-border-radius:5px;
+            border-radius:                5px;
+
+            -webkit-box-shadow: 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+            -moz-box-shadow: 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+            box-shadow:                 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+        }
+
+        .proper-commands .command img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .proper-commands .command:hover {
+            background:rgba(0,0,0,0.08);
+        }
+
+        .proper-commands .command:active {
+            background:rgba(0,0,0,0.12);
+        }
+
+
+        .proper-commands .command.selected {
+            background:rgba(0,0,0,0.12);
+            -webkit-box-shadow: inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+            -moz-box-shadow:        inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+            box-shadow:                 inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+        }
+
+        .proper-commands a.command > div {}
+        .proper-commands a.command.unstyled > div {}
+        .proper-commands a.command.em > div {}
+        .proper-commands a.command.strong > div {}
+        .proper-commands a.command.indent > div {}
+        .proper-commands a.command.outdent > div {}
+        .proper-commands a.command.ul > div {}
+        .proper-commands a.command.ol > div {}
+        .proper-commands a.command.link > div {}
+        .proper-commands a.command.image > div {}
+        .proper-commands a.command.code > div {}
+
+        .proper-commands .separator {
+            position:relative;
+            float:left;
+            width:1px;
+            height:38px;
+            margin:0 6px 0 4px;
+            text-align:center;
+            text-indent:-5000px;
+            background:rgba(0,0,0,0.04);
+            -webkit-box-shadow: 1px 0px 0px rgba(255,255,255,0.5);
+            -moz-box-shadow:        1px 0px 0px rgba(255,255,255,0.5);
+            box-shadow:                 1px 0px 0px rgba(255,255,255,0.5);
+        }
+
     </style>
 
     <link rel="stylesheet" href="css/proper.css">
@@ -72,7 +143,7 @@
             $(document).ready(function() {
                 myEditor.activate($('#wysiwyg'), {
                     placeholder: 'Enter Text',
-                    controlsTarget: $('#tools'),
+                    controlsTarget: $('#wysiwyg_toolbar'),
                     codeFontFamily: 'Monaco, Consolas, "Lucida Console", monospace'
                 });
 
@@ -87,13 +158,26 @@
 </head>
 <body>
     <div id="container">
-        <h1>PROPER™ (Version 0.3.1)</h1>
+        <h1 style="height: 60px; line-height: 60px;"><img style="vertical-align: top;height: 60px;" src="./images/logo.png"> <div style="float: right;">Version: s/0.3.2</div></h1>
 
-        <div id="tools"></div>
+        <div id="wysiwyg_toolbar">
+            <div class="proper-commands">
+                <a href="#" title="Emphasis (CTRL+SHIFT+E)" class="command em" command="em"><img src="./images/gentleface.com/black/png/font_italic_icon&48.png"></a>
+                <a href="#" title="Strong (CTRL+SHIFT+S)" class="command strong" command="strong"><img src="./images/gentleface.com/black/png/font_bold_icon&48.png"></a>
+                <a href="#" title="Inline Code (CTRL+SHIFT+C)" class="command code" command="code"><img src="./images/gentleface.com/black/png/brackets_icon&48.png"></a>
+                <a title="Link (CTRL+SHIFT+L)" href="#" class="command link" command="link"><img src="./images/gentleface.com/black/png/link_icon&48.png"></a>
+                <div class="separator"></div>
+                <a href="#" title="Bullet List (CTRL+SHIFT+B)" class="command ul" command="ul"><img src="./images/gentleface.com/black/png/list_bullets_icon&48.png"></a>
+                <a href="#" title="Numbered List (CTRL+SHIFT+N)" class="command ol" command="ol"><img src="./images/gentleface.com/black/png/list_num_icon&48.png"></a>
+                <a href="#" title="Indent (TAB)" class="command indent" command="indent"><img src="./images/gentleface.com/black/png/indent_decrease_icon&48.png"></a>
+                <a href="#" title="Outdent (SHIFT+TAB)" class="command outdent" command="outdent"><img src="./images/gentleface.com/black/png/indent_increase_icon&48.png"></a>
+
+                <div style="clear: both;"></div>
+            </div>
+        </div>
 
         <div id="wysiwyg">
-            <p>Text wants to be <strong>editable</strong>.<br/>But text also wants to be <strong>meaningful</strong>.
-            </p>
+            <p>Text wants to be <strong>editable</strong>.<br/>But text also wants to be <strong>meaningful</strong>.</p>
         </div>
 
         <div id="source"></div>
@@ -102,7 +186,7 @@
 
         <div id="credits">
             <p>Original code by <a href="http://github.com/michael/">http://github.com/michael/</a>.<br>
-            Fork by <a href="http://github.com/nbrogi/">http://github.com/nbrogi/</a></p>
+            Fork by <a href="http://github.com/nbrogi/">http://github.com/nbrogi/</a>.</p>
         </div>
     </div>
 </body>

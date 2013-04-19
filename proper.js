@@ -16,7 +16,6 @@
 // browser-specific workarounds are required.
 
 (function(){
-
     /* Adapted from http://github.com/hasenj/proper */
     function getDirection(text, guesstimate) {
         function getWordDir(word) {
@@ -43,15 +42,15 @@
 
         // TODO: check first character is a unicode dir character!
         var is_word = function(word) {
-                return word.length > 0; // && word.match(/\w+/) 
+                return word.length > 0; // && word.match(/\w+/)
                 // wops! \w only matches ascii characters :(
         }
         var words = _.filter(text.split(' '), is_word);
 
         var dirs = _.map(words,getWordDir);
 
-        var func_same_direction = function(dir) { 
-                return function(d) { return d == dir; }; 
+        var func_same_direction = function(dir) {
+                return function(d) { return d == dir; };
         }
         var is_non_neutral_dir = function(d) { return d != 'N'; };
         var other_direction = function(dir) { return {'L':'R', 'R':'L'}[dir]; };
@@ -89,7 +88,7 @@
 
     // _.Events (borrowed from Backbone.js)
     // ------------------------------------
-    
+
     // A module that can be mixed in to *any object* in order to provide it with
     // custom events. You may `bind` or `unbind` a callback function to an event;
     // `trigger`-ing an event fires all callbacks in succession.
@@ -99,7 +98,7 @@
     //         object.bind('expand', function(){ alert('expanded'); });
     //         object.trigger('expand');
     //
-    
+
     _.Events = window.Backbone ? Backbone.Events : {
 
         // Bind an event, specified by a string name, `ev`, to a `callback` function.
@@ -154,7 +153,7 @@
             return this;
         }
     };
-    
+
     _.stripTags = function(input, allowed) {
     // Strips HTML and PHP tags from a string
     //
@@ -174,45 +173,36 @@
     // Initial Setup
     // -------------
 
-    controlsTpl = ' \
-        <div class="proper-commands"> \
-            <a href="#" title="Emphasis (CTRL+SHIFT+E)" class="command em" command="em"><div>Emphasis</div></a> \
-            <a href="#" title="Strong (CTRL+SHIFT+S)" class="command strong" command="strong"><div>Strong</div></a> \
-            <a href="#" title="Inline Code (CTRL+SHIFT+C)" class="command code" command="code"><div>Code</div></a> \
-            <a title="Link (CTRL+SHIFT+L)" href="#" class="command link" command="link"><div>Link</div></a>\
-            <a href="#" title="Bullet List (CTRL+SHIFT+B)" class="command ul" command="ul"><div>Bullets List</div></a>\
-            <a href="#" title="Numbered List (CTRL+SHIFT+N)" class="command ol" command="ol"><div>Numbered List</div></a>\
-            <a href="#" title="Indent (TAB)" class="command indent" command="indent"><div>Indent</div></a>\
-            <a href="#" title="Outdent (SHIFT+TAB)" class="command outdent" command="outdent"><div>Outdent</div></a>\
-            <br class="clear"/>\
-        </div>';
-    
+
+
+
+
     // Proper
     // ------
-    
+
     this.Proper = function(options) {
-        var activeElement = null, // element that's being edited
-                $controls,
-                direction = "left",
-                events = _.extend({}, _.Events),
-                pendingChange = false,
-                options = {},
-                defaultOptions = { // default options
-                    multiline: true,
-                    markup: true,
-                    placeholder: 'Enter Text',
-                    startEmpty: false,
-                    codeFontFamily: 'Monaco, Consolas, "Lucida Console", monospace'
-                },
-                Node = window.Node || { // not available in IE
-                    TEXT_NODE: 3,
-                    COMMENT_NODE: 8
-                };
-        
-        
+        var activeElement = null; // element that's being edited
+        var $controls;
+        var direction = "left";
+        var events = _.extend({}, _.Events);
+        var pendingChange = false;
+        var options = {};
+        var defaultOptions = { // default options
+            multiline: true,
+            markup: true,
+            placeholder: 'Enter Text',
+            startEmpty: false,
+            codeFontFamily: 'Monaco, Consolas, "Lucida Console", monospace'
+        };
+        var Node = window.Node || { // not available in IE
+            TEXT_NODE: 3,
+            COMMENT_NODE: 8
+        };
+
+
         // Commands
         // --------
-        
+
         function exec(cmd) {
             var command = commands[cmd];
             if (command.exec) {
@@ -347,7 +337,7 @@
                 }
             }
         };
-        
+
         // Returns true if a and b is the same font family. This is used to check
         // if the current font family (`document.queryCommandValue('fontName')`)
         // is the font family that's used to style code.
@@ -355,7 +345,7 @@
             function normalizeFontFamily(s) {
                 return (''+s).replace(/\s*,\s*/g, ',').replace(/'/g, '"');
             }
-            
+
             a = normalizeFontFamily(a);
             b = normalizeFontFamily(b);
             // Internet Explorer's `document.queryCommandValue('fontName')` returns
@@ -373,11 +363,11 @@
                 return a === b;
             }
         }
-        
-        
+
+
         // Semantify/desemantify content
         // -----------------------------
-        
+
         function escape(text) {
             return text.replace(/&/g, '&amp;')
                                  .replace(/</g, '&lt;')
@@ -390,7 +380,7 @@
             direction = dir === "R" ? "right" : "left";
             $(activeElement).css('direction', dir === "R" ? "rtl" : "ltr");
         }
-        
+
         // Recursively walks the dom and returns the semantified contents. Replaces
         // presentational elements (e.g. `<b>`) with their semantic counterparts
         // (e.g. `<strong>`).
@@ -405,19 +395,19 @@
             replace('.proper-code', 'code');
             replace('div', 'p');
             //replace('span', 'span');
-            
+
             node.find('span').each(function () {
                 if (this.firstChild) {
                     $(this.firstChild).unwrap();
                 }
             });
-            
+
             node.find('p, ul, ol').each(function () {
                 while ($(this).parent().is('p')) {
                     $(this).unwrap();
                 }
             });
-            
+
             // Fix nested lists
             node.find('ul > ul, ul > ol, ol > ul, ol > ol').each(function () {
                 if ($(this).prev()) {
@@ -426,7 +416,7 @@
                     $(this).wrap($('<li />'));
                 }
             });
-            
+
             (function () {
                 var currentP = [];
                 function wrapInP() {
@@ -452,20 +442,20 @@
                 }
                 wrapInP();
             })();
-            
+
             // Remove unnecessary br's
             node.find('br').each(function () {
                 if (this.parentNode.lastChild === this) {
                     $(this).remove();
                 }
             });
-            
+
             // Remove all spans
             node.find('span').each(function () {
                 $(this).children().first().unwrap();
             });
         }
-        
+
         // Replaces semantic elements with their presentational counterparts
         // (e.g. <em> with <i>).
         function desemantifyContents(node) {
@@ -473,12 +463,12 @@
                 function replace(semantic, presentational) {
                     node.find(semantic).each(function () {
                         var presentationalEl = $(presentational).get(0);
-                        
+
                         var child;
                         while (child = this.firstChild) {
                             presentationalEl.appendChild(child);
                         }
-                        
+
                         $(this).replaceWith(presentationalEl);
                     });
                 }
@@ -487,11 +477,11 @@
                 replace('code', '<font class="proper-code" face="'+escape(options.codeFontFamily)+'" />');
             });
         }
-        
+
         // Update the control buttons' state.
         function updateCommandState() {
             if (!options.markup) return;
-            
+
             $controls.find('.command').removeClass('selected');
             _.each(commands, function(command, name) {
                 if (command.isActive && command.isActive()) {
@@ -499,11 +489,11 @@
                 }
             });
         }
-        
-        
+
+
         // Placeholder
         // -----------
-        
+
         // If the activeElement has no content, display the placeholder and give
         // the element the class `empty`.
         function maybeInsertPlaceholder() {
@@ -516,7 +506,7 @@
                 }
             }
         }
-        
+
         // If the activeElement has the class `empty`, remove the placeholder and
         // the class.
         function maybeRemovePlaceholder() {
@@ -526,11 +516,11 @@
                 document.execCommand('delete', false, "");
             }
         }
-        
-        
+
+
         // DOM Selection
         // -------------
-        
+
         // Returns the current selection as a dom range.
         function saveSelection() {
             if (window.getSelection) {
@@ -543,7 +533,7 @@
             }
             return null;
         }
-        
+
         // Selects the given dom range.
         function restoreSelection(range) {
             if (range) {
@@ -556,12 +546,12 @@
                 }
             }
         }
-        
+
         // Selects the whole editing area.
         function selectAll() {
             var el = $(activeElement)[0],
                 range;
-            
+
             if (document.body.createTextRange) { // IE < 9
                 range = document.body.createTextRange();
                 range.moveToElementText(el);
@@ -573,7 +563,7 @@
 
             restoreSelection(range);
         }
-        
+
         // Applies fn and tries to preserve the user's selection and cursor
         // position.
         function doWithSelection (fn) {
@@ -585,9 +575,9 @@
                 ,     endContainer     = sel.endContainer
                 ,     endOffset            = sel.endOffset;
             }
-            
+
             fn();
-            
+
             if (sel) {
                 // After
                 function isInDom(node) {
@@ -606,11 +596,11 @@
                 restoreSelection(sel);
             }
         }
-        
-        
+
+
         // Handle events
         // -------------
-        
+
         // Should be called during a paste event. Removes the focus from the
         // currently focused element. Expects a callback function that will be
         // called with a node containing the pasted content.
@@ -629,19 +619,19 @@
                 callback(tmpEl);
             }, 10);
         }
-        
+
         function cleanPastedContent (node) {
             var allowedTags = {
                 p: [], ul: [], ol: [], li: [],
                 strong: [], code: [], em: [], b: [], i: [], a: ['href']
             };
-            
+
             function traverse (node) {
                 // Remove comments
                 $(node).contents().filter(function () {
                     return this.nodeType === Node.COMMENT_NODE
                 }).remove();
-                
+
                 $(node).children().each(function () {
                     var tag = this.tagName.toLowerCase();
                     traverse(this);
@@ -660,7 +650,7 @@
                     }
                 });
             }
-            
+
             $(node).find('script, style').remove();
             // Remove double annotations
             var annotations = 'strong, em, b, i, code, a';
@@ -671,14 +661,14 @@
             });
             traverse(node);
         }
-        
+
         // Removes <b>, <i> and <font> tags
         function removeAnnotations (node) {
             $(node).find('b, i, font').each(function () {
                 $(this).contents().first().unwrap();
             });
         }
-        
+
         function bindEvents(el) {
             $(el)
                 .unbind('paste')
@@ -686,7 +676,7 @@
                 .unbind('keyup')
                 .unbind('focus')
                 .unbind('blur');
-            
+
             $(el).bind('paste', function () {
                 var isAnnotationActive = commands.strong.isActive()
                                                             || commands.em.isActive()
@@ -703,13 +693,13 @@
                     document.execCommand('insertHTML', false, $(node).html());
                 });
             });
-            
+
             function isTag(node, tag) {
                 if (!node || node === activeElement) return false;
                 if (node.tagName && node.tagName.toLowerCase() === tag) return true;
                 return isTag(node.parentNode, tag);
             }
-            
+
             // Prevent multiline
             $(el).bind('keydown', function(e) {
                 if (!options.multiline && e.keyCode === 13) {
@@ -739,16 +729,16 @@
                     }
                 }
             });
-            
+
             $(el)
                 .bind('focus', maybeRemovePlaceholder)
                 .bind('blur', maybeInsertPlaceholder)
                 .bind('click', updateCommandState);
-            
-            $(el).bind('keyup', function(e) {                
+
+            $(el).bind('keyup', function(e) {
                 updateCommandState();
                 addCodeClasses();
-                
+
                 updateDirection();
 
                 // Trigger change events, but consolidate them to 200ms time slices
@@ -765,7 +755,7 @@
                 return true;
             });
         }
-        
+
         // Instance methods
         // -----------
 
@@ -774,29 +764,30 @@
                 .attr('contenteditable', 'false')
                 .unbind('paste')
                 .unbind('keydown');
-            $('.proper-commands').remove();
+            // $('.proper-commands').remove();
+            $('.proper-commands').fadeOut();
             events.unbind('changed');
         };
-        
+
         // Activate editor for a given element
         function activate (el, opts) {
             options = {};
             _.extend(options, defaultOptions, opts);
-            
+
             // Deactivate previously active element
             deactivate();
-            
+
             // Make editable
             $(el).attr('contenteditable', true);
             activeElement = el;
             bindEvents(el);
-            
+
             // Setup controls
             if (options.markup) {
-                $controls = $(controlsTpl); 
-                $controls.appendTo($(options.controlsTarget));
+                $controls = $(options.controlsTarget);
+                $('.proper-commands').fadeIn();
             }
-            
+
             // Keyboard bindings
             if (options.markup) {
                 function execLater(cmd) {
@@ -815,15 +806,15 @@
                     .keydown('tab',                    execLater('indent'))
                     .keydown('shift+tab',        execLater('outdent'));
             }
-            
-            if (!options.startEmpty) 
+
+            if (!options.startEmpty)
                 $(activeElement).focus();
             else
                 maybeInsertPlaceholder();
-            
+
             updateCommandState();
             desemantifyContents($(activeElement));
-            
+
             // Use <b>, <i> and <font face="monospace"> instead of style attributes.
             // This is convenient because these inline element can easily be replaced
             // by their more semantic counterparts (<strong>, <em> and <code>).
@@ -832,20 +823,20 @@
             } catch (exc) {
                 // This fails in Firefox.
             }
-            
+
             $('.proper-commands a.command').click(function(e) {
                 e.preventDefault();
                 $(activeElement).focus();
                 exec($(e.currentTarget).attr('command'));
                 updateCommandState();
                 setTimeout(function() { events.trigger('changed'); }, 10);
-            });            
+            });
         };
-        
+
         // Get current content
         function content () {
             if ($(activeElement).hasClass('empty')) return '';
-            
+
             if (options.markup) {
                 if (!activeElement) return '';
                 var clone = $(activeElement).clone();
@@ -860,20 +851,20 @@
                 }
             }
         };
-        
+
         // Get current content but stripped
         function contentStripped () {
             return _.stripTags(this.content());
         };
-        
+
         // Expose public API
         // -----------------
-        
+
         return {
             bind:        function () { events.bind.apply(events, arguments); },
             unbind:    function () { events.unbind.apply(events, arguments); },
             trigger: function () { events.trigger.apply(events, arguments); },
-            
+
             activate: activate,
             deactivate: deactivate,
             content: content,
