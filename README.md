@@ -36,4 +36,4 @@ Credits
 
 Tim Baumann ([timjb](http://github.com/timjb)) for his work on 0.3.0.
 
-Icons by [Gentleface]http://gentleface.com/free_icon_set.html))
+Icons by [Gentleface](http://gentleface.com/free_icon_set.html)
