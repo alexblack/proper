@@ -4,7 +4,7 @@
     <title>Proper</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="./css/normalize.css">
 
     <style>
         /* type */
@@ -125,15 +125,13 @@
 
     </style>
 
-    <link rel="stylesheet" href="css/proper.css">
-
     <!-- Libraries -->
-    <script src="lib/jquery-min.js"></script>
-    <script src="lib/jquery.hotkeys.js"></script>
-    <script src="lib/underscore.js"></script>
+    <script src="../js/lib/jquery-min.js"></script>
+    <script src="../js/lib/jquery.hotkeys.js"></script>
+    <script src="../js/lib/underscore.js"></script>
 
     <!-- Source -->
-    <script src="proper.js"></script>
+    <script src="../js/Proper.js"></script>
 
     <script>
         // Proper Init
@@ -154,7 +152,6 @@
             });
         });
     </script>
-
 </head>
 <body>
     <div id="container">
@@ -162,15 +159,20 @@
 
         <div id="wysiwyg_toolbar">
             <div class="proper-commands">
-                <a href="#" title="Emphasis (CTRL+SHIFT+E)" class="command em" command="em"><img src="./images/gentleface.com/black/png/font_italic_icon&48.png"></a>
-                <a href="#" title="Strong (CTRL+SHIFT+S)" class="command strong" command="strong"><img src="./images/gentleface.com/black/png/font_bold_icon&48.png"></a>
-                <a href="#" title="Inline Code (CTRL+SHIFT+C)" class="command code" command="code"><img src="./images/gentleface.com/black/png/brackets_icon&48.png"></a>
-                <a title="Link (CTRL+SHIFT+L)" href="#" class="command link" command="link"><img src="./images/gentleface.com/black/png/link_icon&48.png"></a>
+                <a href="#" title="Emphasis (CTRL+SHIFT+E)" class="command em" command="em"><img src="./images/icons/gentleface.com/font_italic_icon&48.png"></a>
+                <a href="#" title="Strong (CTRL+SHIFT+S)" class="command strong" command="strong"><img src="./images/icons/gentleface.com/font_bold_icon&48.png"></a>
+                <a title="Link (CTRL+SHIFT+L)" href="#" class="command link" command="link"><img src="./images/icons/gentleface.com/link_icon&48.png"></a>
+                <a href="#" title="Bullet List (CTRL+SHIFT+B)" class="command ul" command="ul"><img src="./images/icons/gentleface.com/list_bullets_icon&48.png"></a>
+                <a href="#" title="Numbered List (CTRL+SHIFT+N)" class="command ol" command="ol"><img src="./images/icons/gentleface.com/list_num_icon&48.png"></a>
+
                 <div class="separator"></div>
-                <a href="#" title="Bullet List (CTRL+SHIFT+B)" class="command ul" command="ul"><img src="./images/gentleface.com/black/png/list_bullets_icon&48.png"></a>
-                <a href="#" title="Numbered List (CTRL+SHIFT+N)" class="command ol" command="ol"><img src="./images/gentleface.com/black/png/list_num_icon&48.png"></a>
-                <a href="#" title="Indent (TAB)" class="command indent" command="indent"><img src="./images/gentleface.com/black/png/indent_decrease_icon&48.png"></a>
-                <a href="#" title="Outdent (SHIFT+TAB)" class="command outdent" command="outdent"><img src="./images/gentleface.com/black/png/indent_increase_icon&48.png"></a>
+
+                <a href="#" title="Outdent (SHIFT+TAB)" class="command outdent" command="outdent"><img src="./images/icons/gentleface.com/indent_decrease_icon&48.png"></a>
+                <a href="#" title="Indent (TAB)" class="command indent" command="indent"><img src="./images/icons/gentleface.com/indent_increase_icon&48.png"></a>
+
+                <div class="separator"></div>
+
+                <a href="#" title="Inline Code (CTRL+SHIFT+C)" class="command code" command="code"><img src="./images/icons/gentleface.com/brackets_icon&48.png"></a>
 
                 <div style="clear: both;"></div>
             </div>
