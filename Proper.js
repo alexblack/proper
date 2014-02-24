@@ -237,7 +237,11 @@
         var commands = {
             em: {
                 isActive: function() {
-                    try{return document.queryCommandState('italic', false, true);} catch(e) {return false;}
+                    try{
+                        return document.queryCommandState('italic', false, true);
+                    } catch(e) {
+                        return false;
+                    }
                 },
                 toggleOn: function() {
                     removeFormat();
@@ -250,7 +254,11 @@
 
             strong: {
                 isActive: function() {
-                    try{return document.queryCommandState('bold', false, true);} catch(e) {return false;}
+                    try{
+                        return document.queryCommandState('bold', false, true);
+                    } catch(e) {
+                        return false;
+                    }
                 },
                 toggleOn: function() {
                     removeFormat();
@@ -300,7 +308,11 @@
 
             ul: {
                 isActive: function() {
-                    try{return document.queryCommandState('insertUnorderedList', false, true);} catch(e) {return false;}
+                    try{
+                        return document.queryCommandState('insertUnorderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
                 },
                 exec: function() {
                     document.execCommand('insertUnorderedList', false, true);
@@ -309,7 +321,11 @@
 
             ol: {
                 isActive: function() {
-                    try{return document.queryCommandState('insertOrderedList', false, true);} catch(e) {return false;}
+                    try{
+                        return document.queryCommandState('insertOrderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
                 },
                 exec: function() {
                     document.execCommand('insertOrderedList', false, true);
@@ -789,6 +805,7 @@
             }
 
             // Keyboard bindings
+            /*
             if (options.markup) {
                 function execLater(cmd) {
                     return function(e) {
@@ -796,6 +813,7 @@
                         exec(cmd);
                     };
                 }
+
                 $(activeElement)
                     .keydown('ctrl+shift+e', execLater('em'))
                     .keydown('ctrl+shift+s', execLater('strong'))
@@ -806,6 +824,7 @@
                     .keydown('tab',                    execLater('indent'))
                     .keydown('shift+tab',        execLater('outdent'));
             }
+            */
 
             if (!options.startEmpty)
                 $(activeElement).focus();
