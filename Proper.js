@@ -200,6 +200,164 @@
             COMMENT_NODE: 8
         };
 
+<<<<<<< HEAD
+=======
+
+        // Commands
+        // --------
+
+        function exec(cmd) {
+            var command = commands[cmd];
+            if (command.exec) {
+                command.exec();
+            } else {
+                if (command.isActive()) {
+                    command.toggleOff();
+                } else {
+                    command.toggleOn();
+                }
+            }
+        }
+
+        function removeFormat() {
+            document.execCommand('removeFormat', false, true);
+            _.each(['em', 'strong', 'code'], function (cmd) {
+                var command = commands[cmd];
+                if (command.isActive()) {
+                    command.toggleOff();
+                }
+            });
+        }
+
+        // Give code elements (= monospace font) the class `proper-code`.
+        function addCodeClasses() {
+            $(activeElement).find('font').addClass('proper-code');
+        }
+
+        var nbsp = $('<span>&nbsp;</span>').text();
+
+        var commands = {
+            em: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('italic', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('italic', false, true);
+                },
+                toggleOff: function() {
+                    document.execCommand('italic', false, true);
+                }
+            },
+
+            strong: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('bold', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('bold', false, true);
+                },
+                toggleOff: function () {
+                    document.execCommand('bold', false, true);
+                }
+            },
+
+            code: {
+                isActive: function() {
+                    return cmpFontFamily(document.queryCommandValue('fontName'), options.codeFontFamily);
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('fontName', false, options.codeFontFamily);
+                    addCodeClasses();
+                },
+                toggleOff: function () {
+                    var sel;
+                    if ($.browser.webkit && (sel = saveSelection()).collapsed) {
+                        // Workaround for Webkit. Without this, the user wouldn't be
+                        // able to disable <code> when there's no selection.
+                        var container = sel.endContainer
+                        ,     offset = sel.endOffset;
+                        container.data = container.data.slice(0, offset)
+                                                     + nbsp
+                                                     + container.data.slice(offset);
+                        var newSel = document.createRange();
+                        newSel.setStart(container, offset);
+                        newSel.setEnd(container, offset+1);
+                        restoreSelection(newSel);
+                        document.execCommand('removeFormat', false, true);
+                    } else {
+                        document.execCommand('removeFormat', false, true);
+                    }
+                }
+            },
+
+            link: {
+                exec: function() {
+                    removeFormat();
+                    document.execCommand('createLink', false, window.prompt('URL:', 'http://'));
+                }
+            },
+
+            ul: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('insertUnorderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                exec: function() {
+                    document.execCommand('insertUnorderedList', false, true);
+                }
+            },
+
+            ol: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('insertOrderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                exec: function() {
+                    document.execCommand('insertOrderedList', false, true);
+                }
+            },
+
+            indent: {
+                exec: function() {
+                    try{
+                        if (document.queryCommandState('insertOrderedList', false, true) ||
+                                document.queryCommandState('insertUnorderedList', false, true)) {
+                            document.execCommand('indent', false, true);
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            outdent: {
+                exec: function() {
+                    try{
+                        if (document.queryCommandState('insertOrderedList', false, true) ||
+                                document.queryCommandState('insertUnorderedList', false, true)) {
+                            document.execCommand('outdent', false, true);
+                        }
+                    } catch(e) {}
+                }
+            }
+        };
+
+>>>>>>> FETCH_HEAD
         // Returns true if a and b is the same font family. This is used to check
         // if the current font family (`document.queryCommandValue('fontName')`)
         // is the font family that's used to style code.
@@ -927,7 +1085,33 @@
                 $('.proper-commands').fadeIn();
             }
 
+<<<<<<< HEAD
             if (!options.startEmpty) {
+=======
+            // Keyboard bindings
+            /*
+            if (options.markup) {
+                function execLater(cmd) {
+                    return function(e) {
+                        e.preventDefault();
+                        exec(cmd);
+                    };
+                }
+
+                $(activeElement)
+                    .keydown('ctrl+shift+e', execLater('em'))
+                    .keydown('ctrl+shift+s', execLater('strong'))
+                    .keydown('ctrl+shift+c', execLater('code'))
+                    .keydown('ctrl+shift+l', execLater('link'))
+                    .keydown('ctrl+shift+b', execLater('ul'))
+                    .keydown('ctrl+shift+n', execLater('ol'))
+                    .keydown('tab',                    execLater('indent'))
+                    .keydown('shift+tab',        execLater('outdent'));
+            }
+            */
+
+            if (!options.startEmpty)
+>>>>>>> FETCH_HEAD
                 $(activeElement).focus();
             } else {
                 maybeInsertPlaceholder();

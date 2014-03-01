@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
 	<head>
 	    <title>Proper</title>
 
@@ -212,4 +213,201 @@
 	        });
 	    </script>
 	</body>
+=======
+<head>
+    <title>Proper</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/normalize.css">
+
+    <style>
+        /* type */
+        * {
+            font-size: 16px;
+            font-family: Georgia;
+            color: #444;
+        }
+
+        /* WYSIWYG */
+        #wysiwyg {
+            width: 450px;
+            height: 380px;
+            float: left;
+            padding: 10px;
+            background-color: #efefef;
+            outline: 0;
+        }
+
+        #wysiwyg:hover {
+        }
+        #wysiwyg[contenteditable=true] {
+        }
+
+        /* layout */
+        div#container {
+            width: 960px;
+            position: relative;
+            left: 50%;
+            margin-left: -480px;
+        }
+
+        div#source {
+            width: 450px;
+            height: 380px;
+            float: right;
+            background-color: #111;
+            padding: 10px;
+            color: #fff;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        div#credits {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* old proper.css (temporarely moved here for quick editing) */
+
+        .proper-commands .command {
+            position:relative;
+            float:left;
+            width: 18px;
+            height: 18px;
+            padding: 4px;
+            margin:0 2px 0 0;
+            color:#999;
+            font-size:9px;
+            text-align:center;
+            background:rgba(0,0,0,0.05);
+
+            -webkit-border-radius:5px;
+            -moz-border-radius:5px;
+            border-radius:                5px;
+
+            -webkit-box-shadow: 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+            -moz-box-shadow: 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+            box-shadow:                 0px 1px 0px rgba(255,255,255,0.75), inset 0px 1px 0px rgba(0,0,0,0.03);
+        }
+
+        .proper-commands .command img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .proper-commands .command:hover {
+            background:rgba(0,0,0,0.08);
+        }
+
+        .proper-commands .command:active {
+            background:rgba(0,0,0,0.12);
+        }
+
+
+        .proper-commands .command.selected {
+            background:rgba(0,0,0,0.12);
+            -webkit-box-shadow: inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+            -moz-box-shadow:        inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+            box-shadow:                 inset 0px 1px 4px rgba(0,0,0,0.2), inset 0px 2px 2px rgba(0,0,0,0.04), 0px 1px 0px rgba(255,255,255,0.5);
+        }
+
+        .proper-commands a.command > div {}
+        .proper-commands a.command.unstyled > div {}
+        .proper-commands a.command.em > div {}
+        .proper-commands a.command.strong > div {}
+        .proper-commands a.command.indent > div {}
+        .proper-commands a.command.outdent > div {}
+        .proper-commands a.command.ul > div {}
+        .proper-commands a.command.ol > div {}
+        .proper-commands a.command.link > div {}
+        .proper-commands a.command.image > div {}
+        .proper-commands a.command.code > div {}
+
+        .proper-commands .separator {
+            position:relative;
+            float:left;
+            width:1px;
+            height:38px;
+            margin:0 6px 0 4px;
+            text-align:center;
+            text-indent:-5000px;
+            background:rgba(0,0,0,0.04);
+            -webkit-box-shadow: 1px 0px 0px rgba(255,255,255,0.5);
+            -moz-box-shadow:        1px 0px 0px rgba(255,255,255,0.5);
+            box-shadow:                 1px 0px 0px rgba(255,255,255,0.5);
+        }
+
+    </style>
+
+    <!-- Libraries -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/jquery.hotkeys/0.8b/jquery.hotkeys.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+
+    <!-- Source -->
+    <script src="../Proper.js"></script>
+
+    <script>
+        // Proper Init
+        $(function() {
+            var myEditor = new Proper();
+
+            $(document).ready(function() {
+                myEditor.activate($('#wysiwyg'), {
+                    placeholder: 'Enter Text',
+                    controlsTarget: $('#wysiwyg_toolbar'),
+                    codeFontFamily: 'Monaco, Consolas, "Lucida Console", monospace'
+                });
+
+                // Update node when editor commands are applied
+                myEditor.bind('changed', function() {
+                    $('div#source').text(myEditor.content());
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1 style="height: 60px; line-height: 60px;"><img style="vertical-align: top;height: 60px;" src="./images/logo.png"> <div style="float: right;">Version: s/0.3.2</div></h1>
+
+        <div id="wysiwyg_toolbar">
+            <div class="proper-commands">
+                <a href="#" title="Emphasis" class="command em" command="em"><img src="./images/icons/gentleface.com/font_italic_icon&48.png"></a>
+                <a href="#" title="Strong" class="command strong" command="strong"><img src="./images/icons/gentleface.com/font_bold_icon&48.png"></a>
+                <a title="Link" href="#" class="command link" command="link"><img src="./images/icons/gentleface.com/link_icon&48.png"></a>
+                <a href="#" title="Bullet List" class="command ul" command="ul"><img src="./images/icons/gentleface.com/list_bullets_icon&48.png"></a>
+                <a href="#" title="Numbered List" class="command ol" command="ol"><img src="./images/icons/gentleface.com/list_num_icon&48.png"></a>
+
+                <div class="separator"></div>
+
+                <a href="#" title="Outdent" class="command outdent" command="outdent"><img src="./images/icons/gentleface.com/indent_decrease_icon&48.png"></a>
+                <a href="#" title="Indent" class="command indent" command="indent"><img src="./images/icons/gentleface.com/indent_increase_icon&48.png"></a>
+
+                <div class="separator"></div>
+
+                <a href="#" title="Inline Code" class="command code" command="code"><img src="./images/icons/gentleface.com/brackets_icon&48.png"></a>
+
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+
+        <div id="wysiwyg">
+            <p>Text wants to be <strong>editable</strong>.<br/>But text also wants to be <strong>meaningful</strong>.</p>
+        </div>
+
+        <div id="source"></div>
+
+        <div style="clear: both;"></div>
+
+        <div id="credits">
+            <p>Original code by <a href="http://github.com/michael/">http://github.com/michael/</a>.<br>
+            Fork by <a href="http://github.com/nbrogi/">http://github.com/nbrogi/</a>.</p>
+        </div>
+    </div>
+</body>
+>>>>>>> FETCH_HEAD
 </html>
