@@ -199,9 +199,7 @@
             TEXT_NODE: 3,
             COMMENT_NODE: 8
         };
-
-<<<<<<< HEAD
-=======
+        
 
         // Commands
         // --------
@@ -357,7 +355,6 @@
             }
         };
 
->>>>>>> FETCH_HEAD
         // Returns true if a and b is the same font family. This is used to check
         // if the current font family (`document.queryCommandValue('fontName')`)
         // is the font family that's used to style code.
@@ -1085,9 +1082,6 @@
                 $('.proper-commands').fadeIn();
             }
 
-<<<<<<< HEAD
-            if (!options.startEmpty) {
-=======
             // Keyboard bindings
             /*
             if (options.markup) {
@@ -1110,8 +1104,7 @@
             }
             */
 
-            if (!options.startEmpty)
->>>>>>> FETCH_HEAD
+            if (!options.startEmpty) {
                 $(activeElement).focus();
             } else {
                 maybeInsertPlaceholder();
