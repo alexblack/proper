@@ -200,149 +200,10 @@
             COMMENT_NODE: 8
         };
 
-
-        // Commands
-        // --------
-
-        function exec(cmd) {
-            var command = commands[cmd];
-            if (command.exec) {
-                command.exec();
-            } else {
-                if (command.isActive()) {
-                    command.toggleOff();
-                } else {
-                    command.toggleOn();
-                }
-            }
-        }
-
-        function removeFormat() {
-            document.execCommand('removeFormat', false, true);
-            _.each(['em', 'strong', 'code'], function (cmd) {
-                var command = commands[cmd];
-                if (command.isActive()) {
-                    command.toggleOff();
-                }
-            });
-        }
-
-        // Give code elements (= monospace font) the class `proper-code`.
-        function addCodeClasses() {
-            $(activeElement).find('font').addClass('proper-code');
-        }
-
-        var nbsp = $('<span>&nbsp;</span>').text();
-
-        var commands = {
-            em: {
-                isActive: function() {
-                    try{return document.queryCommandState('italic', false, true);} catch(e) {return false;}
-                },
-                toggleOn: function() {
-                    removeFormat();
-                    document.execCommand('italic', false, true);
-                },
-                toggleOff: function() {
-                    document.execCommand('italic', false, true);
-                }
-            },
-
-            strong: {
-                isActive: function() {
-                    try{return document.queryCommandState('bold', false, true);} catch(e) {return false;}
-                },
-                toggleOn: function() {
-                    removeFormat();
-                    document.execCommand('bold', false, true);
-                },
-                toggleOff: function () {
-                    document.execCommand('bold', false, true);
-                }
-            },
-
-            code: {
-                isActive: function() {
-                    return cmpFontFamily(document.queryCommandValue('fontName'), options.codeFontFamily);
-                },
-                toggleOn: function() {
-                    removeFormat();
-                    document.execCommand('fontName', false, options.codeFontFamily);
-                    addCodeClasses();
-                },
-                toggleOff: function () {
-                    var sel;
-                    if ($.browser.webkit && (sel = saveSelection()).collapsed) {
-                        // Workaround for Webkit. Without this, the user wouldn't be
-                        // able to disable <code> when there's no selection.
-                        var container = sel.endContainer
-                        ,     offset = sel.endOffset;
-                        container.data = container.data.slice(0, offset)
-                                                     + nbsp
-                                                     + container.data.slice(offset);
-                        var newSel = document.createRange();
-                        newSel.setStart(container, offset);
-                        newSel.setEnd(container, offset+1);
-                        restoreSelection(newSel);
-                        document.execCommand('removeFormat', false, true);
-                    } else {
-                        document.execCommand('removeFormat', false, true);
-                    }
-                }
-            },
-
-            link: {
-                exec: function() {
-                    removeFormat();
-                    document.execCommand('createLink', false, window.prompt('URL:', 'http://'));
-                }
-            },
-
-            ul: {
-                isActive: function() {
-                    try{return document.queryCommandState('insertUnorderedList', false, true);} catch(e) {return false;}
-                },
-                exec: function() {
-                    document.execCommand('insertUnorderedList', false, true);
-                }
-            },
-
-            ol: {
-                isActive: function() {
-                    try{return document.queryCommandState('insertOrderedList', false, true);} catch(e) {return false;}
-                },
-                exec: function() {
-                    document.execCommand('insertOrderedList', false, true);
-                }
-            },
-
-            indent: {
-                exec: function() {
-                    try{
-                        if (document.queryCommandState('insertOrderedList', false, true) ||
-                                document.queryCommandState('insertUnorderedList', false, true)) {
-                            document.execCommand('indent', false, true);
-                        }
-                    } catch(e) {}
-                }
-            },
-
-            outdent: {
-                exec: function() {
-                    try{
-                        if (document.queryCommandState('insertOrderedList', false, true) ||
-                                document.queryCommandState('insertUnorderedList', false, true)) {
-                            document.execCommand('outdent', false, true);
-                        }
-                    } catch(e) {}
-                }
-            }
-        };
-
         // Returns true if a and b is the same font family. This is used to check
         // if the current font family (`document.queryCommandValue('fontName')`)
         // is the font family that's used to style code.
-        function cmpFontFamily(a, b) {
+        function sameFontFamily(a, b) {
             function normalizeFontFamily(s) {
                 return (''+s).replace(/\s*,\s*/g, ',').replace(/'/g, '"');
             }
@@ -395,7 +256,6 @@
             replace('b', 'strong');
             replace('.proper-code', 'code');
             replace('div', 'p');
-            //replace('span', 'span');
 
             node.find('span').each(function () {
                 if (this.firstChild) {
@@ -434,7 +294,7 @@
                 var children = _.clone(node.get(0).childNodes);
                 for (var i = 0, l = children.length; i < l; i++) {
                     var child = children[i];
-                    if (!$(child).is('p, ul, ol') &&
+                    if (!$(child).is('h1, h2, h3, p, ul, ol') &&
                             !(child.nodeType === Node.TEXT_NODE && (/^\s*$/).exec(child.data))) {
                         currentP.push(child);
                     } else {
@@ -486,7 +346,7 @@
             $controls.find('.command').removeClass('selected');
             _.each(commands, function(command, name) {
                 if (command.isActive && command.isActive()) {
-                    $controls.find('.command.'+name).addClass('selected');
+                    $controls.find('.command.' + name).addClass('selected');
                 }
             });
         }
@@ -501,7 +361,7 @@
             if ($.trim($(activeElement).text()).length === 0) {
                 $(activeElement).addClass('empty');
                 if (options.markup) {
-                    $(activeElement).html('<p>'+options.placeholder+'</p>');
+                    $(activeElement).html('<p>' + options.placeholder + '</p>');
                 } else {
                     $(activeElement).html(options.placeholder);
                 }
@@ -523,7 +383,7 @@
         // -------------
 
         // Returns the current selection as a dom range.
-        function saveSelection() {
+        function getSelRange() {
             if (window.getSelection) {
                 var sel = window.getSelection();
                 if (sel.rangeCount > 0) {
@@ -534,6 +394,23 @@
             }
             return null;
         }
+
+        // Returns the top parent element for the current selection (see http://stackoverflow.com/questions/7215479/get-parent-element-of-a-selected-text)
+        function getSelectionParent() {
+            var parentEl = null, sel;
+            if (window.getSelection) {
+                sel = window.getSelection();
+                if (sel.rangeCount) {
+                    parentEl = sel.getRangeAt(0).commonAncestorContainer;
+                    if (parentEl.nodeType != 1) {
+                        parentEl = parentEl.parentNode;
+                    }
+                }
+            } else if ( (sel = document.selection) && sel.type != "Control") {
+                parentEl = sel.createRange().parentElement();
+            }
+            return parentEl;
+        }        
 
         // Selects the given dom range.
         function restoreSelection(range) {
@@ -569,7 +446,7 @@
         // position.
         function doWithSelection (fn) {
             // Before
-            var sel = saveSelection()
+            var sel = getSelRange()
             if (sel) {
                 var startContainer = sel.startContainer
                 ,     startOffset        = sel.startOffset
@@ -682,7 +559,7 @@
                 var isAnnotationActive = commands.strong.isActive()
                                                             || commands.em.isActive()
                                                             || commands.code.isActive();
-                var selection = saveSelection();
+                var selection = getSelRange();
                 getPastedContent(function (node) {
                     restoreSelection(selection);
                     $(el).focus();
@@ -717,7 +594,7 @@
                 }
                 // By default, Firefox doesn't create paragraphs. Fix this.
                 if ($.browser.mozilla) {
-                    var selectionStart = saveSelection().startContainer;
+                    var selectionStart = getSelRange().startContainer;
                     if (options.multiline && !isTag(selectionStart, 'p') && !isTag(selectionStart, 'ul')) {
                         document.execCommand('insertParagraph', false, true);
                     }
@@ -757,6 +634,268 @@
             });
         }
 
+
+        // Commands
+        // --------
+
+        function exec(cmd) {
+            var command = commands[cmd];
+            if (command.exec) {
+                command.exec();
+            } else {
+                if (command.isActive()) {
+                    command.toggleOff();
+                } else {
+                    command.toggleOn();
+                }
+            }
+        }
+
+        function removeFormat() {
+            document.execCommand('removeFormat', false, true);
+            _.each(['em', 'strong', 'code'], function (cmd) {
+                var command = commands[cmd];
+                if (command.isActive()) {
+                    command.toggleOff();
+                }
+            });
+        }
+
+        // Give code elements (= monospace font) the class `proper-code`.
+        function addCodeClasses() {
+            $(activeElement).find('font').addClass('proper-code');
+        }
+
+        var nbsp = $('<span>&nbsp;</span>').text();
+
+        function toggleHeadingOn(headingLevel) {
+            removeFormat();
+
+            var savedSel = rangy.saveSelection();
+
+            var $parentElement = ['H1', 'H2', 'H3', 'P'].indexOf(getSelectionParent().tagName.toUpperCase()) != -1 ? $(getSelectionParent()) : $(getSelectionParent()).parent();                 
+
+            var $myHeading = $('<h' + headingLevel + '>' + $parentElement.html() + '</h' + headingLevel + '>');
+            $parentElement.replaceWith($myHeading);
+
+            rangy.restoreSelection(savedSel);
+            /* when switching between headings, rangy.restoreSelection() wraps any selected text
+             * with "<span style="font-weight: normal"></span>". Fix it if it happens
+             */
+            $mySpan = $myHeading.find('span[style="font-weight: normal;"]');
+            if ($mySpan.length) {
+                // insert as regular text node
+                var txt = document.createTextNode($mySpan.text());
+                $myHeading.get(0).insertBefore(txt, $mySpan.get(0));
+
+                // select again
+                var sel = rangy.getSelection();
+                var range = rangy.createRange();
+                range.selectNode(txt);
+                sel.setSingleRange(range);
+
+                // remove <SPAN>
+                $mySpan.remove();
+            }
+
+            return;
+        }
+
+        function toggleHeadingOff(headingLevel) {
+            var savedSel = rangy.saveSelection();
+
+            var $myHeading = getSelectionParent().tagName.toUpperCase() == 'H' + headingLevel ? $(getSelectionParent()) : $(getSelectionParent()).parents('H' + headingLevel);                     
+            var $myParagraph = $('<p>' + $myHeading.html() + '</p>');
+            $myHeading.replaceWith($myParagraph);
+
+            rangy.restoreSelection(savedSel);
+
+            return;
+        }
+
+        var commands = {
+            h1: {
+                isActive: function() {
+                    try{       
+                        var tagName = 'H1';
+                        var parentElement = getSelectionParent();  
+
+                        return parentElement !== undefined && parentElement.tagName.toUpperCase() == tagName;
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    return toggleHeadingOn(1);
+                },
+                toggleOff: function() {
+                    return toggleHeadingOff(1);
+                }
+            },  
+
+            h2: {
+                isActive: function() {
+                    try{       
+                        var tagName = 'H2';
+                        var parentElement = getSelectionParent();  
+
+                        return parentElement !== undefined && parentElement.tagName.toUpperCase() == tagName;
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+
+                    return toggleHeadingOn(2);
+                },
+                toggleOff: function() {
+                    return toggleHeadingOff(2);
+                }
+            },  
+
+            h3: {
+                isActive: function() {
+                    try{       
+                        var tagName = 'H3';
+                        var parentElement = getSelectionParent();  
+
+                        return parentElement !== undefined && parentElement.tagName.toUpperCase() == tagName;
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+
+                    return toggleHeadingOn(3);
+                },
+                toggleOff: function() {
+                    return toggleHeadingOff(3);
+                }
+            },                                    
+
+            em: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('italic', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('italic', false, true);
+                },
+                toggleOff: function() {
+                    document.execCommand('italic', false, true);
+                }
+            },
+
+            strong: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('bold', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('bold', false, true);
+                },
+                toggleOff: function () {
+                    document.execCommand('bold', false, true);
+                }
+            },
+
+            code: {
+                isActive: function() {
+                    return sameFontFamily(document.queryCommandValue('fontName'), options.codeFontFamily);
+                },
+                toggleOn: function() {
+                    removeFormat();
+                    document.execCommand('fontName', false, options.codeFontFamily);
+                    addCodeClasses();
+                },
+                toggleOff: function () {
+                    var sel;
+                    if ($.browser.webkit && (sel = getSelRange()).collapsed) {
+                        // Workaround for Webkit. Without this, the user wouldn't be
+                        // able to disable <code> when there's no selection.
+                        var container = sel.endContainer
+                        ,     offset = sel.endOffset;
+                        container.data = container.data.slice(0, offset)
+                                                     + nbsp
+                                                     + container.data.slice(offset);
+                        var newSel = document.createRange();
+                        newSel.setStart(container, offset);
+                        newSel.setEnd(container, offset+1);
+                        restoreSelection(newSel);
+                        document.execCommand('removeFormat', false, true);
+                    } else {
+                        document.execCommand('removeFormat', false, true);
+                    }
+                }
+            },
+
+            link: {
+                exec: function() {
+                    removeFormat();
+                    document.execCommand('createLink', false, window.prompt('URL:', 'http://'));
+                }
+            },
+
+            ul: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('insertUnorderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                exec: function() {
+                    document.execCommand('insertUnorderedList', false, true);
+                }
+            },
+
+            ol: {
+                isActive: function() {
+                    try{
+                        return document.queryCommandState('insertOrderedList', false, true);
+                    } catch(e) {
+                        return false;
+                    }
+                },
+                exec: function() {
+                    document.execCommand('insertOrderedList', false, true);
+                }
+            },
+
+            indent: {
+                exec: function() {
+                    try{
+                        if (document.queryCommandState('insertOrderedList', false, true) ||
+                                document.queryCommandState('insertUnorderedList', false, true)) {
+                            document.execCommand('indent', false, true);
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            outdent: {
+                exec: function() {
+                    try{
+                        if (document.queryCommandState('insertOrderedList', false, true) ||
+                                document.queryCommandState('insertUnorderedList', false, true)) {
+                            document.execCommand('outdent', false, true);
+                        }
+                    } catch(e) {}
+                }
+            }
+        };
+
+
         // Instance methods
         // -----------
         function deactivate () {
@@ -788,29 +927,11 @@
                 $('.proper-commands').fadeIn();
             }
 
-            // Keyboard bindings
-            if (options.markup) {
-                function execLater(cmd) {
-                    return function(e) {
-                        e.preventDefault();
-                        exec(cmd);
-                    };
-                }
-                $(activeElement)
-                    .keydown('ctrl+shift+e', execLater('em'))
-                    .keydown('ctrl+shift+s', execLater('strong'))
-                    .keydown('ctrl+shift+c', execLater('code'))
-                    .keydown('ctrl+shift+l', execLater('link'))
-                    .keydown('ctrl+shift+b', execLater('ul'))
-                    .keydown('ctrl+shift+n', execLater('ol'))
-                    .keydown('tab',                    execLater('indent'))
-                    .keydown('shift+tab',        execLater('outdent'));
-            }
-
-            if (!options.startEmpty)
+            if (!options.startEmpty) {
                 $(activeElement).focus();
-            else
+            } else {
                 maybeInsertPlaceholder();
+            }
 
             updateCommandState();
             desemantifyContents($(activeElement));
@@ -826,15 +947,21 @@
 
             $('.proper-commands a.command').click(function(e) {
                 e.preventDefault();
-                $(activeElement).focus();
+
+                // $(activeElement).focus();
+
                 exec($(e.currentTarget).attr('command'));
+                
                 updateCommandState();
-                setTimeout(function() { events.trigger('changed'); }, 10);
+                
+                setTimeout(function() {
+                    events.trigger('changed');
+                }, 10);
             });
         };
 
         // Get current content
-        function content () {
+        function getContent() {
             if ($(activeElement).hasClass('empty')) return '';
 
             if (options.markup) {
@@ -854,24 +981,26 @@
 
         // Get current content but stripped
         function contentStripped () {
-            return _.stripTags(this.content());
+            return _.stripTags(this.getContent());
         };
 
         // Expose public API
         // -----------------
 
         return {
-            bind:        function () { events.bind.apply(events, arguments); },
-            unbind:    function () { events.unbind.apply(events, arguments); },
+            bind: function () { events.bind.apply(events, arguments); },
+            unbind: function () { events.unbind.apply(events, arguments); },
             trigger: function () { events.trigger.apply(events, arguments); },
 
             activate: activate,
             deactivate: deactivate,
-            content: content,
+            getContent: getContent,
             contentStripped: contentStripped,
             exec: exec,
             commands: commands,
-            direction: function() { return direction; }
+            direction: function() {
+                return direction;
+            }
         };
     };
 })();

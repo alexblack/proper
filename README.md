@@ -4,9 +4,15 @@ Proper is a semantic WYSIWYG editor based on HTML's `contenteditable` attribute.
 The goal is to output proper semantic HTML. When pasting content, the markup is stripped.
 
 ## Dependencies
-- jQuery 1.10+/jquery-migrate
+- jQuery 1.10
+- jquery-migrate
+
 - jquery.hotkeys
+
 - Underscore
+
+- Rangy
+- rangy-selectionsaverestore
 
 ## Browser support
 ?
