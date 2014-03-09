@@ -384,12 +384,6 @@
                                  .replace(/"/g, '&quot;');
         }
 
-        function updateDirection() {
-            var dir = getDirection($(activeElement).text());
-            direction = dir === "R" ? "right" : "left";
-            $(activeElement).css('direction', dir === "R" ? "rtl" : "ltr");
-        }
-
         // Recursively walks the dom and returns the semantified contents. Replaces
         // presentational elements (e.g. `<b>`) with their semantic counterparts
         // (e.g. `<strong>`).
