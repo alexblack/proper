@@ -1,13 +1,27 @@
-PROPER™ — Semantic Rich Text Editor
-==================
+# Proper — Semantic Rich Text Editor
+Proper is a semantic WYSIWYG editor based on HTML's `contenteditable` attribute..
 
-PROPER is a Semantic Texteditor based on HTML's `contenteditable` attribute. It's being developed in the context of [Substance](http://github.com/michael/substance), a data driven document authoring engine.
+The goal is to output proper semantic HTML. When pasting content, the markup is stripped.
 
-The goal is to output proper semantic HTML by restricting the set of possible tags. When pasting content, the markup is stripped.
+## Dependencies
+- jQuery 1.10
+- jquery-migrate
+
+- jquery.hotkeys
+
+- Underscore
+
+- Rangy
+- rangy-selectionsaverestore
+
+## Browser support
+?
 
 
-Changelog
+## Changelog
 -------------------
+**0.3.2**
+See commits for list of changes.
 
 **0.3.1**
 
@@ -32,5 +46,4 @@ Initial Version.
 
 Credits
 -------------------
-
 Tim Baumann ([timjb](http://github.com/timjb)) for his work on 0.3.0.
