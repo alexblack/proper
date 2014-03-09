@@ -787,7 +787,7 @@
                 updateCommandState();
                 addCodeClasses();
 
-                updateDirection();
+                // updateDirection();
 
                 // Trigger change events, but consolidate them to 200ms time slices
                 setTimeout(function() {
